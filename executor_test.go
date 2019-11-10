@@ -8,27 +8,12 @@ import (
 	"github.com/graphql-go/graphql"
 
 	core "github.com/jacob-ebey/graphql-core"
+	schemas "github.com/jacob-ebey/graphql-core/schemas"
 )
-
-var QueryType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Query",
-	Fields: graphql.Fields{
-		"ping": &graphql.Field{
-			Type: graphql.String,
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				return "Pong", nil
-			},
-		},
-	},
-})
-
-var SchemaType, _ = graphql.NewSchema(graphql.SchemaConfig{
-	Query: QueryType,
-})
 
 func TestExecutorExecutesSchema(t *testing.T) {
 	executor := core.GraphQLExecutor{
-		Schema: SchemaType,
+		Schema: schemas.PingPongSchema,
 	}
 
 	res := executor.Execute(context.TODO(), core.GraphQLRequest{
@@ -64,7 +49,7 @@ func TestExecutorHooks(t *testing.T) {
 	testHook := &TestHook{}
 
 	executor := core.GraphQLExecutor{
-		Schema: SchemaType,
+		Schema: schemas.PingPongSchema,
 		RunBefore: []core.PreExecuteHook{
 			testHook,
 		},
